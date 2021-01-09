@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  solitude:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv4.conf.all.send_redirects=0
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - type: bind
+        source: ./
+        target: /mnt
+    networks:
+     - internal
+    ports:
+      - "443:443"
+      - "1194:1194/udp"
+      - "5000:5000"
+      - "8080:8080"
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOSTNAME: database
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    networks:
+      internal:
+        aliases:
+          - database
+    environment:
+        MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - solitude_datavolume:/var/lib/mysql
+
+volumes:
+     solitude_datavolume:
+networks:
+  internal:

@@ -1,0 +1,47 @@
+.solitudeCounter {
+
+float: right
+font-size: 125%
+
+}
+
+.solitudeCounterDivs {
+
+font-size: 125%
+
+}
+
+.decodedObjectBody {
+
+max-width: 60%
+
+}
+
+.vpnbutton {
+
+width: fit-content
+
+}
+
+.generateConfig {
+    width: fit-content
+
+}
+
+.vpnconfigmodal {
+
+    max-width: 630px;
+
+}
+
+.googleplayimage {
+
+rounded: float-left
+
+}
+
+.appstorelogo {
+
+    rounded: float-right
+
+}

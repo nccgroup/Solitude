@@ -1,0 +1,23 @@
+FROM ubuntu:bionic
+RUN apt-get update && apt-get install -qy protobuf-compiler build-essential git python-setuptools python3-setuptools python3-pip python3-dev python-pip openvpn iptables socat curl net-tools openssl vim --no-install-recommends python-dev libmysqlclient-dev netbase
+RUN pip3 install virtualenv
+RUN mkdir ~/solitude && cd ~/solitude && virtualenv -p python3 ~/solitude
+RUN echo "source ~/solitude/bin/activate" >> ~/.bashrc
+COPY requirements.txt /root/solitude/
+RUN /bin/bash -c "source ~/solitude/bin/activate; pip install --requirement ~/solitude/requirements.txt"
+ENV PATH=~/solitude/bin:$PATH
+VOLUME /etc/openvpn
+EXPOSE 443/tcp 1194/udp
+EXPOSE 5000
+ADD ./solitude.py /root/solitude/bin/
+COPY ./solitudeCode/ /root/solitude/bin/solitudeCode
+ADD ./solitude.py /root/solitude/bin/
+COPY ./configs/ /root/solitude/bin/configs/
+ADD ./solitude.py /root/solitude/
+WORKDIR /root/solitude/bin/
+ADD ./bin /usr/local/sbin
+RUN export LC_ALL=C.UTF-8
+RUN export LANG=C.UTF-8
+ENTRYPOINT ["/root/solitude/bin/python3", "/mnt/run.py", "--env", "container-dev"]
+#ENTRYPOINT ["/bin/bash", "-c", "sleep infinity"]
+
