@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Solitude</title>
+    <link href="/static/css/styles.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+          crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+            crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
+            integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttonsbuttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="static/purify.js"></script>
+    <link href="static/solitude.css" rel="stylesheet"/>
+</head>
+<body class="sb-nav-fixed">
+
+
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+
+    <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
+        <svg class="svg-inline--fa fa-bars fa-w-14" aria-hidden="true" focusable="false" data-prefix="fas"
+             data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+            <path fill="currentColor"
+                  d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path>
+        </svg></button>
+
+    <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+
+    </form>
+
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+
+                    <!--                            <div class="sb-sidenav-menu-heading">Core</div>-->
+                    <a class="nav-link" href="/">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Dashboard
+                    </a>
+
+                    <a data-toggle="modal" href=#vpnconfigurationsettings class="nav-link" onclick=checkifgenerated()>VPN
+                        Configuration
+
+
+                    </a>
+
+
+
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Solitude</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard</li>
+
+                </ol>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body solitudeCounterDivs">Domains
+                                <span class="text-white mb-4 solitudeCounter" id="uniqueDomainsCounter">0</span>
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-danger text-white mb-4">
+                            <div class="card-body solitudeCounterDivs">Violations
+
+                                <span class="solitudeCounter" id="ViolationCounter">0</span>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Domain</th>
+                                    <th>Violation</th>
+                                    <th>Decoder Object</th>
+                                    <th>Time</th>
+                                    <th>Violation ID</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+
+<div class="modal fade" id="vpnconfigmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">VPN Setup Wizard</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="openVPNDIV" style="display:none">
+                    <h3>2. Step Two install the Open VPN Applications and copy the VPN config to your mobile device</h3>
+
+                    <a href='https://play.google.com/store/apps/details?id=net.openvpn.openvpn&hl=en_US&gl=US&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
+                            alt='Get it on Google Play' src='/static/googleplay.png' class="googleplayimage"/></a>
+                    <a href='https://apps.apple.com/us/app/openvpn-connect/id590379981'><img
+                            alt='Download on the App Store' src='/static/apple.svg' class="appstorelogo"/></a>
+                <h4> Download either the TCP or UDP config and copy it to your mobile device with the Open VPN App</h4>
+                     <a href="/static/clientTCP.ovpn">TCP Config</a>
+                    <a href="/static/clientUDP.ovpn">UDP Config</a>
+
+
+                </div>
+                <div id="mitmproxyinstructions" style="display:none">
+                    <h3>3. Step Three install the mitmproxy certificate onto your mobile device</h3>
+                    <h3> IMPORTANT: Make sure that the VPN profile is installed and you are connected to the VPN in the Open VPN app before proceeding with this step</h3>
+                    <h4>Browse to <a href="http://mitm.it">mitm.it</a> to install the mitm proxy certficate for your device </h4>
+                    <div>Click<a href="https://docs.mitmproxy.org/stable/concepts-certificates/" target="_blank"
+                                 rel="noopener noreferrer"> here</a> for instructions on how to install the mitmproxy
+                        certifcate on your mobile device.
+                    </div>
+                </div>
+
+                <div id="initserverconfigDiv" class="align-middle">
+                    <!--            <div class="col-md">Generating Server Config....</div>-->
+                    <h4>Generating Server Config... (This may take a few minutes)</h4>
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div id="stepOneStart" class="align-middle" style="display:none">
+                    <div>
+                        <h4>1. Start the VPN..</h4>
+                        <h5>Depending on your prefrence start either the TCP or UDP server. Make sure to choose the matching config in the next step </h5>
+                        <button type="button" class="btn btn-primary btn-block vpnbutton" onclick=startTCP()>Start TCP
+                    </button>
+                    <button type="button" class="btn btn-primary btn-block vpnbutton" onclick=startUDP()>Start UDP
+                    </button>
+                    </div>
+                </div>
+
+                <div id="configureDiv" style="display:none">
+                    <!--                <div class="row">-->
+                    <div class="col-md">It appears that you have not generated a client VPN profile. In order to proxy
+                        mobile traffic to Solitude it is recommended that you you use the VPN Docker Server
+                        Configuration.
+                        You will need to specify the IP address of the VPN server(docker container). Usually this is
+                        your computers internal IP address on your home network.
+                    </div>
+
+
+                    <div class="col-md-4 mt-4"></div>
+
+                    <form>
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inlineFormInput">IP Address</label>
+                                <input id="ipinput" type="text" class="form-control mb-2" id="inlineFormInput"
+                                       placeholder="Enter IP">
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" id="generateButton" class="btn btn-primary mb-2"
+                                        onclick=checkIPFirst()>Generate Config
+                                </button>
+                                <button id="loadingButton" class="btn btn-primary" type="button" style="display:none">
+                                    <span id="loadingspan" class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    Generating...
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="col-md-4 mt-4"></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button id="closeModalButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                </button>
+                <button id="nextOnVPNInstructions" type="button" class="btn btn-secondary" style="display:none"
+                        onclick=showinstallvpnmodal()>Next
+                </button>
+                <button id="backOnVPNInstructions" type="button" class="btn btn-secondary" style="display:none"
+                        onclick=goBacktoDownloadVPNConfigs()>Back
+                </button>
+                <button id="showMitmproxyInstructions" type="button" class="btn btn-secondary" style="display:none"
+                        onclick=showmitmproxyinstructions()>Next
+                </button>
+                <button id="backOnMitmproxyInstructions" type="button" class="btn btn-secondary" style="display:none"
+                        onclick=goBackToOpenVPNAppPage()>Back
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="decoderObjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true" style="display:none">
+    <div class="modal-dialog decodedObjectBody" role="document">
+
+
+        <div class="modal-content col col-xl">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Decoded Object</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="decoderObjectModalBody" style="overflow-y: auto;" class="modal-body">
+            <pre id="decoderObject">
+
+
+
+            </pre>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="vpnconfigurationsettings" tabindex="-1" role="dialog" aria-labelledby="vpn"
+     aria-hidden="true">
+    <div class="modal-dialog vpnconfigmodal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vpn">VPN Configuration Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div id="VPNID">
+                    <form class="form-inline">
+                        <div class="form-group mb-2">
+                            <div class="form-group">
+                                <h4>IP Address</h4>
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <label for="ipinput2" class="sr-only">Server IP</label>
+                                    <input type="text" name="ipinut" id="ipinput2" class="form-control"
+                                           placeholder="Server IP">
+                                </div>
+
+                                <button id="vpnconfigbutton" type="button" onclick=checkIP()
+                                        class="btn btn-primary mb-2">Generate VPN Client Config
+                                </button>
+                                <button id="loadingButton2" class="btn btn-primary mb-2" type="button"
+                                        style="display:none">
+                                    <span id="loadingspan2" class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    Generating...
+                                </button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="downloadVPNConfigs">
+                    <h5>Download VPN Configs</h5>
+                    <a href="{{ url_for('static', filename='/clientTCP.ovpn')}}">TCP Config</a>
+                    <a href="{{ url_for('static', filename='/clientUDP.ovpn')}}">UDP Config</a>
+                </div>
+                <h4>Start VPN</h4>
+                <button type="button" class="btn btn-primary btn-block vpnbutton" onclick=startTCP()>Start TCP</button>
+                <button type="button" class="btn btn-primary btn-block vpnbutton" onclick=startUDP()>Start UDP</button>
+                <br>
+                <h4>Stop VPN</h4>
+                <button type="button" class="btn btn-primary btn-block vpnbutton" onclick=stopVPN()>Stop VPN</button>
+                <br>
+                <h4>Start Proxy</h4>
+                <button type="button" class="btn btn-primary btn-block vpnbutton" onclick=startProxy()>Start Proxy</button>
+                <br>
+                <div id="deleteConfigDiv">
+                <h4>Delete Client VPN Config</h4>
+                <button type="button" class="btn btn-primary btn-block vpnbutton" onclick=deleteconfig()>Delete Config
+                </button>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+<script src="/static/sockets.js"></script>
+<script src="/static/vpn.js"></script>
+<script src="/static/js/scripts.js"></script>
+</body>
+</html>

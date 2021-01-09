@@ -1,0 +1,197 @@
+#!/bin/bash
+
+set -e
+cd /etc/openvpn
+
+function do_init() {
+	[ -d /dev/net ] ||
+		mkdir -p /dev/net
+	[[ -c /dev/net/tun ]] ||
+		mknod /dev/net/tun c 10 200
+
+	iptables -t nat -A POSTROUTING -s  192.168.255.0/24 -o eth0 -j MASQUERADE
+	trap handle_exit EXIT
+}
+
+function gen_server_config() {
+	[ -f /mnt/vpnconfig/dh.pem ] ||
+		openssl dhparam -out /mnt/vpnconfig/dh.pem 2048
+	[ -f /mnt/vpnconfig/key.pem ] ||
+		openssl genrsa -out /mnt/vpnconfig/key.pem 2048
+	[ -f /mnt/vpnconfig/csr.pem ] ||
+		openssl req -new -key /mnt/vpnconfig/key.pem -out /mnt/vpnconfig/csr.pem -subj /CN=OpenVPN/
+	[ -f /mnt/vpnconfig/cert.pem ] ||
+		openssl x509 -req -in /mnt/vpnconfig/csr.pem -out /mnt/vpnconfig/cert.pem -signkey /mnt/vpnconfig/key.pem -days 36525
+
+	[ -f /mnt/vpnconfig/tcp443.conf ] || cat >/mnt/vpnconfig/tcp443.conf <<-EOF
+		server 192.168.255.0 255.255.255.128
+		verb 3
+		duplicate-cn
+		key /mnt/vpnconfig/key.pem
+		ca /mnt/vpnconfig/cert.pem
+		cert /mnt/vpnconfig/cert.pem
+		dh /mnt/vpnconfig/dh.pem
+		keepalive 10 60
+		persist-key
+		persist-tun
+
+		proto tcp-server
+		port 443
+		dev tun443
+		status openvpn-status-443.log
+
+		tls-version-min 1.2
+	EOF
+
+	[ -f /mnt/vpnconfig/udp1194.conf ] || cat >/mnt/vpnconfig/udp1194.conf <<-EOF
+		server 192.168.255.0 255.255.255.128
+		verb 3
+		duplicate-cn
+		key /mnt/vpnconfig/key.pem
+		ca /mnt/vpnconfig/cert.pem
+		cert /mnt/vpnconfig/cert.pem
+		dh /mnt/vpnconfig/dh.pem
+		keepalive 10 60
+		persist-key
+		persist-tun
+
+		proto udp
+		port 1194
+		dev tun1194
+		status openvpn-status-1194.log
+
+		tls-version-min 1.2
+	EOF
+}
+
+
+function gen_client_config() {
+	MY_IP_ADDR=$1
+	if [ -z "$1" ]; then
+		echo "No IP specified, setting 172.16.0.1"
+		MY_IP_ADDR=172.16.0.1
+	fi
+	echo "Setting VPN IP: ${MY_IP_ADDR}"
+
+	if [ ! -f /mnt/vpnconfig/key.pem ]; then
+    	echo "Key file not generated yet! Run again after a minute or two."
+    	return
+	fi
+
+	PROTO=$(cat /etc/openvpn/proto | awk '{{ print $1 }}')
+	PORT=$(cat /etc/openvpn/proto | awk '{{ print $2 }}')
+
+
+	[ -f /mnt/vpnconfig/clientUDP.ovpn ] || cat >/mnt/vpnconfig/clientUDP.ovpn <<-EOF
+		client
+		nobind
+		dev tun
+		redirect-gateway def1
+
+		<key>
+		`cat /mnt/vpnconfig/key.pem`
+		</key>
+		<cert>
+		`cat /mnt/vpnconfig/cert.pem`
+		</cert>
+		<ca>
+		`cat /mnt/vpnconfig/cert.pem`
+		</ca>
+		<dh>
+		`cat /mnt/vpnconfig/dh.pem`
+		</dh>
+
+		<connection>
+		remote $MY_IP_ADDR 1194 udp
+		</connection>
+
+		<connection>
+		remote $MY_IP_ADDR 1194 udp
+		</connection>
+	EOF
+
+
+	  [ -f /mnt/vpnconfig/clientTCP.ovpn ] || cat >/mnt/vpnconfig/clientTCP.ovpn <<-EOF
+		client
+		nobind
+		dev tun
+		redirect-gateway def1
+
+		<key>
+		`cat /mnt/vpnconfig/key.pem`
+		</key>
+		<cert>
+		`cat /mnt/vpnconfig/cert.pem`
+		</cert>
+		<ca>
+		`cat /mnt/vpnconfig/cert.pem`
+		</ca>
+		<dh>
+		`cat /mnt/vpnconfig/dh.pem`
+		</dh>
+
+		<connection>
+		remote $MY_IP_ADDR 443 tcp
+		</connection>
+
+		<connection>
+		remote $MY_IP_ADDR 443 tcp-client
+		</connection>
+	EOF
+
+}
+
+
+function start_proxy() {
+	iptables -t nat -A PREROUTING -i tun443 -p tcp --dport 80 -j REDIRECT --to-port 8080
+	iptables -t nat -A PREROUTING -i tun443 -p tcp --dport 443 -j REDIRECT --to-port 8080
+	iptables -t nat -A PREROUTING -i tun1194 -p tcp --dport 80 -j REDIRECT --to-port 8080
+	iptables -t nat -A PREROUTING -i tun1194 -p tcp --dport 443 -j REDIRECT --to-port 8080
+}
+
+
+function handle_exit() {
+	pids=($(pidof openvpn))
+	for i in ${pids[@]}; do
+		[ "$i" == "" ] && continue
+		kill $i || echo "error killing ${i}"
+	done
+}
+
+
+case $1 in
+	--udp)
+		echo "Starting server in UDP mode"
+		do_init
+		gen_server_config
+		echo "udp 1194" > /etc/openvpn/proto
+		;;
+	--tcp)
+		echo "Starting server in TCP mode"
+		do_init
+		gen_server_config
+		echo "tcp 443" > /etc/openvpn/proto
+		;;
+	--config)
+		gen_client_config $2
+		exit
+		;;
+  --stopvpn)
+    handle_exit
+    ;;
+	--proxy)
+		start_proxy 
+		exit
+		;;
+   --init)
+		do_init
+		exit
+		;;
+	*)
+		echo "No option specified, using UDP config"
+		do_init
+		gen_server_config
+		echo "udp 1194" > /etc/openvpn/protoUDP
+		exec openvpn /mnt/vpnconfig/udp1194.conf
+		;;
+esac
