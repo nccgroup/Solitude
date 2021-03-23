@@ -5,8 +5,8 @@ Solitude is a privacy analysis tool that enables anyone to conduct their own pri
 
 1. `git clone https://github.com/nccgroup/Solitude`
 2. Install [Docker](https://docs.docker.com/docker-for-mac/install/)
-3. `docker-compose -f docker-compose.prod.yml build`
-4. `docker-compose -f docker-compse.prod.yml up`
+3. `docker-compose -f docker-compose-prod.yml build`
+4. `docker-compose -f docker-compose-prod.yml up`
 5. Browse to http://localhost:5000 and follow the instructions to start the VPN server and configure your mobile device with a VPN profile and mitm proxy certificate.
 
 #### Install locally (without docker-compose) on Mac OS X
@@ -25,8 +25,8 @@ Solitude is a privacy analysis tool that enables anyone to conduct their own pri
 
 ## Install for Linux
 1. Install [Docker](https://docs.docker.com/engine/install/ubuntu/) and [Docker-compose](https://docs.docker.com/compose/install/)
-2. `docker-compose -f docker-compose.prod.yml build`
-3. `docker-compose -f docker-compse.prod.yml up`
+2. `docker-compose -f docker-compose-prod.yml build`
+3. `docker-compose -f docker-compose-prod.yml up`
 4. Browse to http://localhost:5000 and follow the instructions to start the VPN server and configure your mobile device with a VPN profile and mitm proxy certificate.
 
 #### Install locally (without docker-compose) on Linux
