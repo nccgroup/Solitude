@@ -5,7 +5,6 @@ build/
 dist/
 logs/
 configs/myrules.yara
-configs/myrules.json
 regex_string_search_finder.py 
 solitudeCode/IP2LOCATION-LITE-DB1.BIN
 solitudeCode/__pycache__/
@@ -31,6 +30,5 @@ static/clientTCP.ovpn
 configs/settings.json
 openvpn-status-443.log
 openvpn-status-1194.log
-lib/
 include/
 pyvenv.cfg

@@ -1,0 +1,20 @@
+{
+    "firstName": "Marcus",
+    "lastName": "Shumate",
+    "username": "shumate26789",
+    "email": "marcus.shumate7@example.com",
+    "socialsecuritynumber":"215-75-0143",
+    "phoneNumber": "5555555555",
+    "phoneNumber2": "(555) 555-5555",
+    "addressLine1": "34 Wilmar Farm Road",
+    "addressLine2": "Herndon, MD, 22070",
+    "zipcode": "22070",
+    "password": "TEST_PASSWORD_GOES_HERE",
+    "birthday": "03-28-1984",
+    "birthday2": "03281984",
+    "birthday3": "1984-28-03",
+    "birthPlace": "Herndon, Maryland",
+    "birthPlace4": "Herndon, MD, USA",
+    "deviceName": "Test123",
+    "securityquestion": "Hamburgers"
+}
