@@ -31,6 +31,5 @@ static/clientTCP.ovpn
 configs/settings.json
 openvpn-status-443.log
 openvpn-status-1194.log
-lib/
 include/
 pyvenv.cfg
