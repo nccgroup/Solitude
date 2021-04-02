@@ -21,13 +21,13 @@ $(document).ready(function () {
                 buttons: [
                         'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
-                "order": [4, 'desc'],
+                "order": [5, 'desc'],
                 "processing": true,
                 "stateSave": true,
                 "deferRender": true,
 
                 "columnDefs": [{
-                        "targets": 0,
+                        "targets": 1,
 
                         "createdCell": function (td, cellData, rowData, row, col) {
                                 $(td).html('<a href=https://' + DOMPurify.sanitize(cellData) + '>' + DOMPurify.sanitize(cellData) + '</a>');
@@ -50,7 +50,7 @@ $(document).ready(function () {
                 },
 
                 {
-                        "targets": 1,
+                        "targets": 2,
 
                         "createdCell":
                                 function (td, cellData, rowData, row, col) {
@@ -69,7 +69,7 @@ $(document).ready(function () {
                 },
 
                 {
-                        "targets": 4,
+                        "targets": 5,
 
                         "createdCell":
                                 function (td, cellData, rowData, row, col) {

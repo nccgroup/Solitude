@@ -50,7 +50,7 @@ def background_thread():
         if lastID < firstQuery:
             for c, v in connection_session.query(Connections, Violations).filter(
                     Connections.id == Violations.connection_ID).filter(Violations.id > lastID):
-                socketio.emit('ViolationResponse', json.dumps({"host": c.host, "violation": v.violation_message,
+                socketio.emit('ViolationResponse', json.dumps({"UserAgent": c.user_agent, "host": c.host, "violation": v.violation_message,
                                                                "phorcys object": "<a href=javascript:getphorcysobject(" + str(
                                                                    v.id) + ")" + ">Click to view Decoded Object</a>",
                                                                "time": str(c.time), "Violation ID": v.id}))
