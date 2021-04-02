@@ -26,7 +26,42 @@ $(document).ready(function () {
                 "stateSave": true,
                 "deferRender": true,
 
-                "columnDefs": [{
+
+
+
+
+
+
+
+
+
+                "columnDefs": [
+                {
+                "targets": 0,
+
+                        "createdCell": function (td, cellData, rowData, row, col) {
+
+                            var useragentstring = cellData
+
+                                if (useragentstring.includes("CFNetwork")) {
+                                    var iosUserAgent = useragentstring.split('/', 1)
+                                  // "locationd/2394.0.33 CFNetwork/1128.0.1 Darwin/19.6.0"
+                                  // Attempt to show what mobile app the traffic is coming from in iOS
+                               var useragent = '</b><span style="color:orange;"><b>' + DOMPurify.sanitize(iosUserAgent) + '</b></span>'
+
+                                $(td).html(useragent)
+
+
+                                } else {
+                                $(td).html(DOMPurify.sanitize(cellData))
+                                }
+
+                }
+                },
+                {
+
+
+
                         "targets": 1,
 
                         "createdCell": function (td, cellData, rowData, row, col) {
@@ -55,7 +90,7 @@ $(document).ready(function () {
                         "createdCell":
                                 function (td, cellData, rowData, row, col) {
                                         if (cellData.split("***")[1]) {
-                                                console.log(cellData.split("***"))
+                                                //.log(cellData.split("***"))
                                                 var violation = $(td)[0].innerText.split("***")[0]
                                                 var violationData = $(td)[0].innerText.split("***")[1]    
                                                 var Myhtml = '<b>' + DOMPurify.sanitize(violation) + ': ' + '</b><span style="color:red;"><b>' + DOMPurify.sanitize(violationData) + '</b></span>'

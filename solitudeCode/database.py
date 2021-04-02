@@ -34,7 +34,7 @@ class Database:
             if decoded_header == 'content-type':
                 content_type = header[1].decode('utf8').casefold()
             if decoded_header == 'user-agent':
-                user_agent = header[1].decode('utf8').casefold()
+                user_agent = header[1].decode('utf8')
         return Connections(host=flow.request.pretty_host, url=flow.request.pretty_url,
                            time=datetime.datetime.fromtimestamp(flow.request.data.timestamp_start),
                            method=flow.request.method,
