@@ -55,7 +55,7 @@ $(document).ready(function () {
                         "createdCell":
                                 function (td, cellData, rowData, row, col) {
                                         if (cellData.split("***")[1]) {
-                                                console.log(cellData.split("***"))
+                                            //    console.log(cellData.split("***"))
                                                 var violation = $(td)[0].innerText.split("***")[0]
                                                 var violationData = $(td)[0].innerText.split("***")[1]    
                                                 var Myhtml = '<b>' + DOMPurify.sanitize(violation) + ': ' + '</b><span style="color:red;"><b>' + DOMPurify.sanitize(violationData) + '</b></span>'
@@ -166,6 +166,56 @@ function initServerVPNConfig() {
                 });
         });
 }
+
+function fetchRules() {
+const container = document.getElementById('jsoneditor')
+const options = {
+    mode: 'code',
+    modes: ['code'],
+    mainMenuBar: false,
+    statusBar: false,
+    onError: function (err) {
+      alert("Invlalid JSON")
+    },
+  }
+var domain = window.origin + "/api/v1/myrule_settings"
+fetch(domain)
+   .then(response => response.json())
+  .then(data =>
+
+
+
+
+   editor = new JSONEditor(container, options, data)
+
+);
+
+    $('.modal-content').resizable({
+      //alsoResize: ".modal-dialog",
+      minHeight: 300,
+      minWidth: 300
+    });
+    $('.modal-dialog').draggable();
+
+    $('#myrulessettings').on('show.bs.modal', function() {
+      $(this).find('.modal-body').css({
+        'max-height': '100%'
+      });
+    });
+
+
+        }
+
+
+
+
+
+function cleareditor()
+{
+    document.getElementById("jsoneditor").innerHTML = "";
+}
+
+
 
 
 function checkIPFirst() {
