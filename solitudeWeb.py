@@ -153,6 +153,16 @@ def getphorcysobject():
             return v.phorcies_object
 
 
+@app.route('/api/v1/myrule_settings')
+@antiDNSRebind
+def API_retrieve_myrule_settings():
+    if request.method == "GET":
+        with open("configs/myrules.json") as f:
+            data = json.load(f)
+            return data
+    elif request.method == "POST":
+        rules = request.json.get("rules")
+        return 'True'
 
 @app.route('/api/v1/vpnconfigpoll', methods=["POST"])
 @antiDNSRebind
