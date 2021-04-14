@@ -2,7 +2,7 @@
 
 Solitude is a privacy analysis tool that enables anyone to conduct their own privacy investigations. Whether a curious novice or a more advanced researcher, Solitude makes the process of evaluating user privacy within an app accessible for everyone.
 
-###Important Note
+### Important Note
 
 Prior to installing Solitude it should be noted that Solitude should be run on a private network that is trusted.
 The way that the Solitude web app interface is currently built is under the assumption that users will run the tool on a private trusted network.
