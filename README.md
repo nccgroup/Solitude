@@ -1,6 +1,29 @@
 # Solitude
 
 Solitude is a privacy analysis tool that enables anyone to conduct their own privacy investigations. Whether a curious novice or a more advanced researcher, Solitude makes the process of evaluating user privacy within an app accessible for everyone.
+
+###Important Note
+
+Prior to installing Solitude it should be noted that Solitude should be run on a private network that is trusted.
+The way that the Solitude web app interface is currently built is under the assumption that users will run the tool on a private trusted network.
+
+##### A note on certificate pinning
+
+If you are using Solitude for testing mobile apps (we hope you are!) then it
+should be clear that if you are using a non jail broken device that you may not
+be able to capture all HTTP traffic if the application or third party SDKS
+emeded into the app use [certficate pinning](https://cheatsheetseries.owasp.org/cheatsheets/Pinning_Cheat_Sheet.html). Certificate pinning is a security
+mechanism that ensures that the server the app is communicating with is that in
+which it expects. Apps and SDKS often times use certificate pinning to protect
+their apps in the event a certificate authority is compromised and malicious
+certificates are issued by an attacker which may allow the attacker to observe or modify 
+TLS traffic from the app to the app servers.
+Solitude does not support certificate pinning bypasses. We leave this up to the
+users of Solitude. With that being said we do not **ever ever** recommend
+jailbreaking or rooting your own personal mobile device. If you are interested
+in using a jailbroken or rooted phone you should use a test device with test
+data to test apps. 
+
 ## Install for Mac OS X
 
 1. `git clone https://github.com/nccgroup/Solitude`
