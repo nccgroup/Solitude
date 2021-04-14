@@ -7,6 +7,8 @@ def createYaraRules():
     with open('configs/myrules.json') as f:
         rulefile = json.load(f)
     for k, v in rulefile.items():
+        if type(v) == int:
+            v = str(v)
         if ' ' in v:
             completedRules.append((
                 # if no spaces then do not create rule. Also add name so there is no duplicate rule
