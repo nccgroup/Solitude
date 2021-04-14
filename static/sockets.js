@@ -182,31 +182,83 @@ var domain = window.origin + "/api/v1/myrule_settings"
 fetch(domain)
    .then(response => response.json())
   .then(data =>
-
-
-
-
+  // console.log(data)
    editor = new JSONEditor(container, options, data)
 
 );
 
+
+
     $('.modal-content').resizable({
       //alsoResize: ".modal-dialog",
       minHeight: 300,
-      minWidth: 300
-    });
-    $('.modal-dialog').draggable();
+      minWidth: 300,
 
+        resize: function( event, ui ) {
+        editor.resize()
+
+
+
+
+        },
+
+//        create: function( event, ui ) {
+//       ui.size.width = 623//"623px",
+//       ui.size.height = 529//"529px"
+//       }
+
+      //originalSize: {width: "623px", height: "529px"}
+
+    });
+   // $('.modal-dialog').draggable();
+//width: 623px; height: 529px;
     $('#myrulessettings').on('show.bs.modal', function() {
       $(this).find('.modal-body').css({
-        'max-height': '100%'
+       // 'max-height': '100%'
+        //height: "100%"
+
       });
     });
+
+//    $("ui-resizable").on()
 
 
         }
 
+function saveRules() {
+try {
+editor.get()
+var json = editor.getText()
 
+        var data = {"rules": json}
+
+var domain = window.origin + "/api/v1/myrule_settings"
+        var myRequest = new Request(domain);
+        fetch(myRequest, {
+                method: 'post', headers: {'Content-Type': 'application/json'}, body:JSON.stringify(data)})
+.then(function (response) {
+                return response.text().then(function (text) {
+                        switch (text) {
+                          case 'True':
+                           console.log("Saved No Problem")
+                             break;
+                        case "False":
+                        alert("Invalid JSON please fix")
+
+}
+
+
+                });
+        });
+
+
+} catch(e)
+{
+alert("Invalid JSON")
+console.log(e)
+
+}
+}
 
 
 
@@ -227,6 +279,8 @@ function checkIPFirst() {
         }
 
 }
+
+
 
 function checkVPNConfigFirst(ip = 'none') {
 
