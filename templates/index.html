@@ -277,7 +277,7 @@
     <div class="modal-dialog decodedObjectBody" role="document">
 
 
-        <div class="modal-content col col-xl">
+        <div class="modal-content col col-xl decoderObjectmodal">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Decoded Object</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -286,15 +286,15 @@
             </div>
 
             <div id="decoderObjectModalBody" style="overflow-y: auto;" class="modal-body">
-            <pre id="decoderObject">
+
+            <div id="jsoneditorObj" style="height:100%"></div>
 
 
 
-            </pre>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick=clearDecoderObject()>Close</button>
 
             </div>
         </div>
