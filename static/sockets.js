@@ -127,12 +127,46 @@ function getphorcysobject(id) {
 
 
                         let clean = DOMPurify.sanitize(text);
-                        //var data = JSON.stringify(clean, null, '2')
                         $("#decoderObjectModal").modal('show')
                         var jsonObj = JSON.parse(clean)
-                        //$("#decoderObject").html(jsonObj)
 
-                        document.getElementById("decoderObject").textContent = JSON.stringify(jsonObj, null, 2);
+
+                    const container = document.getElementById('jsoneditorObj')
+const options = {
+    mode: 'code',
+    modes: ['code'],
+    mainMenuBar: false,
+    statusBar: false,
+    onError: function (err) {
+      alert("Invlalid JSON")
+    },
+  }
+
+editor = new JSONEditor(container, options, jsonObj)
+
+$('.modal-content').resizable({
+      //alsoResize: ".modal-dialog",
+      minHeight: 300,
+      minWidth: 300,
+
+        resize: function( event, ui ) {
+        editor.resize()
+
+
+        },
+
+    });
+   // $('.modal-dialog').draggable();
+
+    $('#decoderObjectModal').on('show.bs.modal', function() {
+      $(this).find('.modal-body').css({
+
+
+      });
+    });
+
+
+
 
 
 
@@ -198,30 +232,17 @@ fetch(domain)
         editor.resize()
 
 
-
-
         },
-
-//        create: function( event, ui ) {
-//       ui.size.width = 623//"623px",
-//       ui.size.height = 529//"529px"
-//       }
-
-      //originalSize: {width: "623px", height: "529px"}
 
     });
    // $('.modal-dialog').draggable();
-//width: 623px; height: 529px;
+
     $('#myrulessettings').on('show.bs.modal', function() {
       $(this).find('.modal-body').css({
-       // 'max-height': '100%'
-        //height: "100%"
+
 
       });
     });
-
-//    $("ui-resizable").on()
-
 
         }
 
@@ -267,7 +288,11 @@ function cleareditor()
     document.getElementById("jsoneditor").innerHTML = "";
 }
 
+function clearDecoderObject() {
 
+ document.getElementById("jsoneditorObj").innerHTML = "";
+
+}
 
 
 function checkIPFirst() {
