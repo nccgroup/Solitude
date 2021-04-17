@@ -107,7 +107,13 @@ $(document).ready(function () {
                 webSocketHandler(data)
         })
 
+$('#myrulessettings').on('hidden.bs.modal', function () {
+  document.getElementById("jsoneditor").innerHTML = ""
+})
 
+$('#decoderObjectModal').on('hidden.bs.modal', function () {
+  document.getElementById("jsoneditorObj").innerHTML = ""
+})
 
 
 });
