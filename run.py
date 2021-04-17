@@ -13,7 +13,7 @@ load_dotenv()
 
 def runSolitude(solitudeProcess):
     # This is to prevent connection errors as the it seems like the web app tries to connect to the db before it's been created
-    #time.sleep(20)
+    time.sleep(20)
     # We do this import here because it loads the db on import before the settings from the command line arg can be configured
     from solitude import Solitude
     solitudeAddon = Solitude()
@@ -36,7 +36,6 @@ def runSolitude(solitudeProcess):
 
 def main():
     setEnviroment()
-    #time.sleep(20)
     solitudeWebProcess = subprocess.Popen([os.getenv('PYTHON_PATH'), os.getenv('WEBAPP_SCRIPT')], stdout=sys.stdout, stderr=sys.stderr)  # $, env=env)
 
     runSolitude(solitudeWebProcess)
