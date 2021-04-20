@@ -9,15 +9,25 @@ from solitudeCode.phorcys.inspectors.yara_inspector import YaraInspector
 from solitudeCode.phorcys.loaders import flow as pflow
 from solitudeCode.utils import utils
 
+import os
+
 
 class SolitudeDecoder:
     rflow = ''
 
     def decode(self, flow):
+        if os.getenv('ENVIRONMENT') == "local":
+            path = "configs/"
+
+        if os.getenv('ENVIRONMENT') == "container-prod" or os.getenv('ENVIRONMENT') == "container-dev":
+            path = "/mnt/configs/"
+
+
+
         inspectors = [
-            YaraInspector(open('configs/deviceData.yara', 'r').read()),
-            YaraInspector(open('configs/gpsData.yara', 'r').read()),
-            YaraInspector(open('configs/myrules.yara', 'r').read())
+            YaraInspector(open(path+'deviceData.yara', 'r').read()),
+            YaraInspector(open(path+'gpsData.yara', 'r').read()),
+            YaraInspector(open(path+'myrules.yara', 'r').read())
         ]
 
         if isinstance(flow, WebSocketFlow):

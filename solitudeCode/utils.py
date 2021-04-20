@@ -62,9 +62,17 @@ class utils:
             self.logEntry(line)
 
     def logEntry(self, line):
-        if not os.path.exists('logs'):
-            os.mkdir('logs')
-        file = os.getcwd() + "/logs/solitudeCode-" + str(datetime.now().strftime("%Y-%m-%d")) + ".log"
+        if os.getenv('ENVIRONMENT') == "local":
+            path = os.getcwd()+"/logs/"
+
+        if os.getenv('ENVIRONMENT') == "container-prod" or os.getenv('ENVIRONMENT') == "container-dev":
+            path = "/mnt/logs/"
+
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        file = path + "solitudeCode-" + str(datetime.now().strftime("%Y-%m-%d")) + ".log"
+
         with open(file, 'a') as f:
             f.write(line)
             f.close()

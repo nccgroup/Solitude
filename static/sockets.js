@@ -55,7 +55,7 @@ $(document).ready(function () {
                         "createdCell":
                                 function (td, cellData, rowData, row, col) {
                                         if (cellData.split("***")[1]) {
-                                                console.log(cellData.split("***"))
+                                            //    console.log(cellData.split("***"))
                                                 var violation = $(td)[0].innerText.split("***")[0]
                                                 var violationData = $(td)[0].innerText.split("***")[1]    
                                                 var Myhtml = '<b>' + DOMPurify.sanitize(violation) + ': ' + '</b><span style="color:red;"><b>' + DOMPurify.sanitize(violationData) + '</b></span>'
@@ -107,7 +107,13 @@ $(document).ready(function () {
                 webSocketHandler(data)
         })
 
+$('#myrulessettings').on('hidden.bs.modal', function () {
+  document.getElementById("jsoneditor").innerHTML = ""
+})
 
+$('#decoderObjectModal').on('hidden.bs.modal', function () {
+  document.getElementById("jsoneditorObj").innerHTML = ""
+})
 
 
 });
@@ -127,12 +133,46 @@ function getphorcysobject(id) {
 
 
                         let clean = DOMPurify.sanitize(text);
-                        //var data = JSON.stringify(clean, null, '2')
                         $("#decoderObjectModal").modal('show')
                         var jsonObj = JSON.parse(clean)
-                        //$("#decoderObject").html(jsonObj)
 
-                        document.getElementById("decoderObject").textContent = JSON.stringify(jsonObj, null, 2);
+
+                    const container = document.getElementById('jsoneditorObj')
+const options = {
+    mode: 'code',
+    modes: ['code'],
+    mainMenuBar: false,
+    statusBar: false,
+    onError: function (err) {
+      alert("Invlalid JSON")
+    },
+  }
+
+editor = new JSONEditor(container, options, jsonObj)
+
+$('.modal-content').resizable({
+      //alsoResize: ".modal-dialog",
+      minHeight: 300,
+      minWidth: 300,
+
+        resize: function( event, ui ) {
+        editor.resize()
+
+
+        },
+
+    });
+   // $('.modal-dialog').draggable();
+
+    $('#decoderObjectModal').on('show.bs.modal', function() {
+      $(this).find('.modal-body').css({
+
+
+      });
+    });
+
+
+
 
 
 
@@ -167,6 +207,99 @@ function initServerVPNConfig() {
         });
 }
 
+function fetchRules() {
+const container = document.getElementById('jsoneditor')
+const options = {
+    mode: 'code',
+    modes: ['code'],
+    mainMenuBar: false,
+    statusBar: false,
+    onError: function (err) {
+      alert("Invlalid JSON")
+    },
+  }
+var domain = window.origin + "/api/v1/myrule_settings"
+fetch(domain)
+   .then(response => response.json())
+  .then(data =>
+  // console.log(data)
+   editor = new JSONEditor(container, options, data)
+
+);
+
+
+
+    $('.modal-content').resizable({
+      //alsoResize: ".modal-dialog",
+      minHeight: 300,
+      minWidth: 300,
+
+        resize: function( event, ui ) {
+        editor.resize()
+
+
+        },
+
+    });
+   // $('.modal-dialog').draggable();
+
+    $('#myrulessettings').on('show.bs.modal', function() {
+      $(this).find('.modal-body').css({
+
+
+      });
+    });
+
+        }
+
+function saveRules() {
+try {
+editor.get()
+var json = editor.getText()
+
+        var data = {"rules": json}
+
+var domain = window.origin + "/api/v1/myrule_settings"
+        var myRequest = new Request(domain);
+        fetch(myRequest, {
+                method: 'post', headers: {'Content-Type': 'application/json'}, body:JSON.stringify(data)})
+.then(function (response) {
+                return response.text().then(function (text) {
+                        switch (text) {
+                          case 'True':
+                           console.log("Saved No Problem")
+                             break;
+                        case "False":
+                        alert("Invalid JSON please fix")
+
+}
+
+
+                });
+        });
+
+
+} catch(e)
+{
+alert("Invalid JSON")
+console.log(e)
+
+}
+}
+
+
+
+function cleareditor()
+{
+    document.getElementById("jsoneditor").innerHTML = "";
+}
+
+function clearDecoderObject() {
+
+ document.getElementById("jsoneditorObj").innerHTML = "";
+
+}
+
 
 function checkIPFirst() {
 
@@ -177,6 +310,8 @@ function checkIPFirst() {
         }
 
 }
+
+
 
 function checkVPNConfigFirst(ip = 'none') {
 

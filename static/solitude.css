@@ -45,3 +45,15 @@ rounded: float-left
     rounded: float-right
 
 }
+
+.myrulessettingsmodal {
+
+width: 50vw;
+height: 75vh;
+}
+
+.decoderObjectmodal {
+
+width: 60vw;
+height: 85vh;
+}

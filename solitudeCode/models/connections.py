@@ -15,7 +15,7 @@ class Connections(Base):
     method = Column(String(16))
     content_length = Column(Integer)
     content_type = Column(String(255))
-    user_agent = Column(String(255))
+    user_agent = Column(String(10000))
     IP_address = Column(String(20))
     #violations = relationship('Violations', back_populates='connection_ID')#, viewonly=False, sync_backref=False)
     relationship('Violations', back_populates='connection_ID')#, viewonly=False, sync_backref=False)

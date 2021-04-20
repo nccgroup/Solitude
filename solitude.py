@@ -77,8 +77,7 @@ class Solitude:
         matching_rules = {}
 
         flow.request.decode(strict=True)
-
-
+        
         solitude_decoder = SolitudeDecoder()
 
         # Creates our utils object which has a lot of useful features, logging, rule matching etc... Found in utils.py

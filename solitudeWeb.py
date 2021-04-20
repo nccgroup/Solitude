@@ -1,7 +1,7 @@
 import datetime
 import decimal
 import ipaddress
-import json
+import json 
 import os
 import subprocess
 import time
@@ -16,10 +16,11 @@ from sqlalchemy import select
 from sqlalchemy import text
 from functools import wraps
 
-
 from solitudeCode.database import Database
 from solitudeCode.models.connections import Connections
 from solitudeCode.models.violations import Violations
+
+from solitudeCode.rules import createYaraRules
 
 
 app = Flask(__name__)
@@ -153,6 +154,26 @@ def getphorcysobject():
             return v.phorcies_object
 
 
+@app.route('/api/v1/myrule_settings', methods=['GET', 'POST'])
+@antiDNSRebind
+def API_retrieve_myrule_settings():
+    if os.getenv('ENVIRONMENT') == "local":
+        path = "configs/myrules.json"
+
+    if os.getenv('ENVIRONMENT') == "container-prod" or os.getenv('ENVIRONMENT') == "container-dev":
+        path = "/mnt/configs/myrules.json"
+
+    if request.method == "GET":
+        with open(path) as f:
+            return Response(f.read(), mimetype="application/json")
+    elif request.method == "POST":
+        rules = request.json.get("rules")
+        f = open(path, "w")
+        f.write(rules)
+        f.close()
+        createYaraRules()
+
+        return 'True'
 
 @app.route('/api/v1/vpnconfigpoll', methods=["POST"])
 @antiDNSRebind

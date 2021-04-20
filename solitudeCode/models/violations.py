@@ -8,7 +8,7 @@ class Violations(Base):
     __tablename__ = 'violations'
 
     id = Column(Integer, primary_key=True, index=True)
-    violation_message = Column(String(255))
+    violation_message = Column(String(10000))
     connection_ID = Column(Integer, ForeignKey('connections.id'), index=True)
     body = Column(LargeBinary(length=(2**32)-1))
     cookies = Column(Text)
